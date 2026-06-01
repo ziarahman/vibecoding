@@ -1,0 +1,29 @@
+# --- Web framework ---
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+python-multipart==0.0.17
+
+# --- Data validation / settings ---
+pydantic==2.10.3
+pydantic-settings==2.6.1
+
+# --- Persistence ---
+SQLAlchemy==2.0.36
+
+# --- Agentic pipeline ---
+langgraph==0.2.53
+langchain-core==0.3.21
+
+# --- LLM providers (cloud + local) ---
+langchain-openai==0.2.10
+langchain-anthropic==0.3.0
+langchain-ollama==0.2.1
+
+# --- Discovery / verification I/O ---
+httpx==0.28.0
+feedparser==6.0.11
+tavily-python==0.5.0
+
+# --- Misc ---
+python-dotenv==1.0.1
+tenacity==9.0.0
