@@ -55,12 +55,16 @@ class Settings(BaseSettings):
     # --- Discovery ---
     tavily_api_key: Optional[str] = None
     # Comma-separated RSS feeds scanned by the Discovery node.
+    # SEC EDGAR atom feed + fallback Yahoo Finance IPO news feed (Nasdaq RSS is unreliable).
     rss_feeds: str = (
-        "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&type=S-1&output=atom,"
-        "https://www.nasdaq.com/feed/rssoutbound?category=IPOs"
+        "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&type=S-1&dateb=&owner=include&count=40&search_text=&output=atom,"
+        "https://feeds.finance.yahoo.com/rss/2.0/headline?s=ipo&region=US&lang=en-US"
     )
     discovery_max_documents: int = 12
-    http_user_agent: str = "ipo-signal-intel/1.0 (+https://github.com/)"
+    rss_timeout_seconds: float = 20.0
+    # SEC EDGAR requires User-Agent in "Company Name email@domain.com" format.
+    # Override HTTP_USER_AGENT in .env with your actual contact details.
+    http_user_agent: str = "ipo-signal-intel contact@example.com"
 
     # --- SEC EDGAR ---
     sec_edgar_base: str = "https://efts.sec.gov/LATEST/search-index"

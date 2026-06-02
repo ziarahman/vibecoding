@@ -164,7 +164,10 @@ def _fetch_rss(url: str, limit: int) -> List[DiscoveredDocument]:
     try:
         import feedparser
 
-        resp = httpx.get(url, headers=_HTTP_HEADERS, timeout=12.0, follow_redirects=True)
+        resp = httpx.get(url, headers=_HTTP_HEADERS, timeout=settings.rss_timeout_seconds, follow_redirects=True)
+        if resp.status_code == 403:
+            logger.warning("RSS 403 Forbidden for %s — check HTTP_USER_AGENT in .env (SEC requires 'Company email@domain.com' format)", url)
+            return []
         feed = feedparser.parse(resp.text)
         for entry in feed.entries[:limit]:
             title = getattr(entry, "title", "").strip()
