@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import json
 from datetime import datetime
-from typing import Any, List
+from typing import Any, List, Optional
 
 from sqlalchemy import (
     Float,
@@ -67,7 +67,7 @@ class JSONEncodedList(TypeDecorator):
     def process_bind_param(self, value: Any, dialect) -> str:
         return json.dumps(value if value is not None else [])
 
-    def process_result_value(self, value: str | None, dialect) -> Any:
+    def process_result_value(self, value: Optional[str], dialect) -> Any:
         if value is None or value == "":
             return []
         return json.loads(value)
@@ -87,29 +87,29 @@ class Signal(Base):
 
     # Identity / dedup key
     company_name: Mapped[str] = mapped_column(String(256), index=True)
-    ticker: Mapped[str | None] = mapped_column(String(16), nullable=True, index=True)
-    exchange: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    ticker: Mapped[Optional[str]] = mapped_column(String(16), nullable=True, index=True)
+    exchange: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
     category: Mapped[str] = mapped_column(String(32), default="OTHER", index=True)
 
     # Extracted metrics
-    valuation_usd: Mapped[float | None] = mapped_column(Float, nullable=True)
-    price_range_low: Mapped[float | None] = mapped_column(Float, nullable=True)
-    price_range_high: Mapped[float | None] = mapped_column(Float, nullable=True)
-    shares_offered: Mapped[float | None] = mapped_column(Float, nullable=True)
-    projected_date: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    valuation_usd: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    price_range_low: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    price_range_high: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    shares_offered: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    projected_date: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
 
     headline_claim: Mapped[str] = mapped_column(Text, default="")
-    raw_quote: Mapped[str | None] = mapped_column(Text, nullable=True)
+    raw_quote: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
     # Source provenance
-    source_title: Mapped[str | None] = mapped_column(Text, nullable=True)
-    source_url: Mapped[str | None] = mapped_column(Text, nullable=True, index=True)
-    source_name: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    source_title: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    source_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True, index=True)
+    source_name: Mapped[Optional[str]] = mapped_column(String(128), nullable=True)
 
     # Adjudication
     status: Mapped[str] = mapped_column(String(16), default="PENDING", index=True)
     confidence: Mapped[float] = mapped_column(Float, default=0.0)
-    reasoning: Mapped[str | None] = mapped_column(Text, nullable=True)
+    reasoning: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     key_supporting_points: Mapped[List[str]] = mapped_column(
         JSONEncodedList, default=list
     )
